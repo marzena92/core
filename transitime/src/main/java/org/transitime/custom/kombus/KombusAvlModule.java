@@ -109,7 +109,7 @@ public class KombusAvlModule extends PollUrlAvlModule {
 		 				Double longitude=entry.getDouble("Longitude");
 
 		 				//2016-09-07 17:02:48
-		 				SimpleDateFormat dateformater=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		 				SimpleDateFormat dateformater=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
 		 				Date timestamp=dateformater.parse(entry.getString("Time"));
 
