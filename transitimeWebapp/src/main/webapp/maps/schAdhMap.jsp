@@ -46,12 +46,12 @@ var vehicleLayer;
  * schedule adherence.
  */
 function getVehiclePopupContent(vehicle) {
-	return "<b>Vehicle:</b> " + vehicle.id 
-		+ "<br/><b>Route:</b> " + vehicle.routeName
-		+ "<br/><b>To:</b> " + vehicle.headsign
-		+ "<br/><b>SchAhd:</b> " + vehicle.schAdhStr
-		+ "<br/><b>Block:</b> " + vehicle.block
-		+ "<br/><b>Driver:</b> " + vehicle.driver;
+	return "<b>Pojazd:</b> " + vehicle.id 
+		+ "<br/><b>Linia:</b> " + vehicle.routeName
+		+ "<br/><b>Kurs:</b> " + vehicle.headsign
+		+ "<br/><b>Odchylenie:</b> " + vehicle.schAdhStr
+		+ "<br/><b>Zadanie ( grupa zadan ):</b> " + vehicle.block
+		+ "<br/><b>Kierowca:</b> " + vehicle.driver;
 }
 
 /**
@@ -205,8 +205,8 @@ function createMap(mapTileUrl, mapTileCopyright) {
 	
 	L.tileLayer(mapTileUrl, {
 		// Specifying a shorter version of attribution. Original really too long.
-	    //attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-	    attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> &amp; <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery ©<%= WebConfigParams.getMapTileCopyright() %>',
+	    //attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery Â© <a href="http://mapbox.com">Mapbox</a>',
+	    attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> &amp; <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery Â©<%= WebConfigParams.getMapTileCopyright() %>',
 	    maxZoom: 19
 	}).addTo(map);
 

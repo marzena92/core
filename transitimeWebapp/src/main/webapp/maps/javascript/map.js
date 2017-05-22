@@ -84,21 +84,21 @@ function predictionCallback(preds, status) {
 				// Added any special indicators for if schedule based,
 				// delayed, or not yet departed from terminal
 				if (pred.scheduleBased)
-					content += '<sup>sched</sup>';
+					content += '<sup>według rozkładu</sup>';
 				else {
 					if (pred.notYetDeparted)
-						content += '<sup>waiting</sup>';
+						content += '<sup>czeka</sup>';
 					else
 						if (pred.delayed) 
-							content += '<sup>delay</sup>';
+							content += '<sup>opóźnienie</sup>';
 				}
 			}
-			content += ' mins';
+			content += ' minut';
 			
 			content += '</span>';
 		} else {
 			// There are no predictions so let user know
-			content += "No predictions";
+			content += "Brak aktualnych danych";
 		}
 	}
 	
@@ -339,12 +339,12 @@ function getVehicleMarker(vehicleId) {
  */
 function formatSpeed(speedInMetersPerSec) {
 	// If not a number then just return blank string
-	if (speedInMetersPerSec == "NaN")
+	if (speedInMetersPerSec == "Brak danych")
 		return "";
 	
 	// Convert m/s to km/hr and truncate to 1 decimal place to make
 	// output pretty
-	return (parseFloat(speedInMetersPerSec) * 3.6).toFixed(1) + " km/hr";
+	return (parseFloat(speedInMetersPerSec) * 3.6).toFixed(1) + " km/h";
 }
 
 /**
@@ -354,7 +354,7 @@ function formatSpeed(speedInMetersPerSec) {
 function getVehiclePopupContent(vehicleData) {
 	var currentTime = (new Date).getTime()/1000;
 	var ageInSecs = Math.round(currentTime - vehicleData.loc.time);
-	return "Last GPS:<br/>" + ageInSecs + " sec";
+	return "Ostatnia aktualizacja GPS:<br/>" + ageInSecs + " sekund";
 }
 
 /**

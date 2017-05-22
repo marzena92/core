@@ -238,11 +238,11 @@ public class TemporalDifference implements Serializable {
 		
 		// Add early/ontime/late info
 		if (temporalDifferenceMsec > 0)
-			str += " (early)";
+			str += " (przyspieszenie)";
 		else if (temporalDifferenceMsec == 0)
-			str += " (ontime)";
+			str += " (na czas)";
 		else
-			str += " (late)";
+			str += " (opoznienie)";
 		
 		// Return the results
 		return str;

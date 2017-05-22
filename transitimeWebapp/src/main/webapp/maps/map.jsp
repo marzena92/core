@@ -143,10 +143,10 @@ function predictionCallback(preds, status) {
 	predictionsTimeout = setTimeout(getPredictionsJson, 20000, routeStopPreds.routeShortName, routeStopPreds.stopId);
 
 	// Add route and stop info
-	var content = '<b>Route:</b> ' + routeStopPreds.routeName + '<br/>' 
-		+ '<b>Stop:</b> ' + routeStopPreds.stopName + '<br/>';
+	var content = '<b>Linia:</b> ' + routeStopPreds.routeName + '<br/>' 
+		+ '<b>Przystanek:</b> ' + routeStopPreds.stopName + '<br/>';
 	if (verbose)
-		content += '<b>Stop Id:</b> ' + routeStopPreds.stopId + '<br/>';
+		content += '<b>Id przystanku:</b> ' + routeStopPreds.stopId + '<br/>';
 		
 	// For each destination add predictions
 	for (var i in routeStopPreds.dest) {
@@ -157,7 +157,7 @@ function predictionCallback(preds, status) {
 		
 		// Add the destination/headsign info
 		if (routeStopPreds.dest[i].headsign)
-			content += '<b>Destination:</b> ' + routeStopPreds.dest[i].headsign + '<br/>';
+			content += '<b>Cel:</b> ' + routeStopPreds.dest[i].headsign + '<br/>';
 		
 		// Add each prediction for the current destination
 		if (routeStopPreds.dest[i].pred.length > 0) {
@@ -189,14 +189,14 @@ function predictionCallback(preds, status) {
 				*/
 				// If in verbose mode add vehicle info
 				if (verbose)
-					content += ' <span class="vehicle">(vehicle ' + pred.vehicle + ')</span>';
+					content += ' <span class="vehicle">(pojazd' + pred.vehicle + ')</span>';
 			}
-			content += ' minutes';
+			content += ' minut';
 			
 			content += '</span>';
 		} else {
 			// There are no predictions so let user know
-			content += "No predictions";
+			content += "Brak danych";
 		}
 	}
 	
@@ -364,7 +364,7 @@ function formatSpeed(speedInMetersPerSec) {
 	
 	// Convert m/s to km/hr and truncate to 1 decimal place to make
 	// output pretty
-	return (parseFloat(speedInMetersPerSec) * 3.6).toFixed(1) + " km/hr";
+	return (parseFloat(speedInMetersPerSec) * 3.6).toFixed(1) + " km/h";
 }
 
 /**
@@ -375,33 +375,33 @@ function getVehiclePopupContent(vehicleData) {
     var layoverStr = verbose && vehicleData.layover ? 
 			 ("<br/><b>Layover:</b> " + vehicleData.layover) : "";
     var layoverDepartureStr = vehicleData.layover ? 
-    		 ("<br/><b>Departure:</b> " + 
+    		 ("<br/><b>Odjazd:</b> " + 
     				 dateFormat(vehicleData.layoverDepTime)) : "";
     var nextStopNameStr = vehicleData.nextStopName ? 
-    		 ("<br/><b>Next Stop:</b> " + vehicleData.nextStopName) : "";
+    		 ("<br/><b>Nastepny przystanek:</b> " + vehicleData.nextStopName) : "";
     if (verbose && vehicleData.nextStopId)
-    	nextStopNameStr += "<br/><b>Next Stop Id:</b> " + vehicleData.nextStopId;
+    	nextStopNameStr += "<br/><b>Nastepny przystanek Id:</b> " + vehicleData.nextStopId;
     var driver = vehicleData.driver ? 
-    		"<br/><b>Driver:</b> " + vehicleData.driver : "";
-    var latLonHeadingStr = verbose ? "<br/><b>Lat:</b> " + vehicleData.loc.lat
-    			+ "<br/><b>Lon:</b> " + vehicleData.loc.lon 
-    			+ "<br/><b>Heading:</b> " + vehicleData.loc.heading 
-    			+ "<br/><b>Speed:</b> " + formatSpeed(vehicleData.loc.speed)
+    		"<br/><b>Kierowca:</b> " + vehicleData.driver : "";
+    var latLonHeadingStr = verbose ? "<br/><b>Dlugosc geograf.:</b> " + vehicleData.loc.lat
+    			+ "<br/><b>Szerokosc geograf.:</b> " + vehicleData.loc.lon 
+    			+ "<br/><b>Kierunek:</b> " + vehicleData.loc.heading 
+    			+ "<br/><b>Predkosc:</b> " + formatSpeed(vehicleData.loc.speed)
     			: "";
 	var gpsTimeStr = dateFormat(vehicleData.loc.time);
-    var directionStr = verbose ? "<br/><b>Direction:</b> " + vehicleData.direction : ""; 
-    var tripPatternStr = verbose ? "<br/><b>Trip Pattern:</b> " + vehicleData.tripPattern : "";
-    var startTimeStr = vehicleData.isScheduledService ? "" : "<br/><b>Start Time:</b> "+dateFormat(vehicleData.freqStartTime/1000);
-    var schAdhStr = vehicleData.isScheduledService ? "<br/><b>SchAdh:</b> " + vehicleData.schAdhStr : ""
-    var content = "<b>Vehicle:</b> " + vehicleData.id 
-    	+ "<br/><b>Route: </b> " + vehicleData.routeShortName
+    var directionStr = verbose ? "<br/><b>Kierunek:</b> " + vehicleData.direction : ""; 
+    var tripPatternStr = verbose ? "<br/><b>Wzorzec kursu:</b> " + vehicleData.tripPattern : "";
+    var startTimeStr = vehicleData.isScheduledService ? "" : "<br/><b>Czas startu:</b> "+dateFormat(vehicleData.freqStartTime/1000);
+    var schAdhStr = vehicleData.isScheduledService ? "<br/><b>Odchylenie:</b> " + vehicleData.schAdhStr : ""
+    var content = "<b>Pojazd:</b> " + vehicleData.id 
+    	+ "<br/><b>Linia: </b> " + vehicleData.routeShortName
 		+ latLonHeadingStr
-		+ "<br/><b>GPS Time:</b> " + gpsTimeStr
-		+ "<br/><b>Headsign:</b> " + vehicleData.headsign
+		+ "<br/><b>Czas GPS:</b> " + gpsTimeStr
+		+ "<br/><b>Kierunek:</b> " + vehicleData.headsign
 		+ directionStr 
 		+ schAdhStr 
-		+ "<br/><b>Block:</b> " + vehicleData.block
-		+ "<br/><b>Trip:</b> " + vehicleData.trip
+		+ "<br/><b>Zadanie ( grupa zadan ):</b> " + vehicleData.block
+		+ "<br/><b>Kurs:</b> " + vehicleData.trip
 		+ tripPatternStr
 		+ startTimeStr
 		+ layoverStr
@@ -839,8 +839,8 @@ L.control.zoom({position: 'bottomleft'}).addTo(map);
 var mapTileUrl = '<%= WebConfigParams.getMapTileUrl() %>'; 
 L.tileLayer(mapTileUrl, {
 	// Specifying a shorter version of attribution. Original really too long.
-    //attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> &amp; <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery ©<%= WebConfigParams.getMapTileCopyright() %>',
+    //attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery \A9 <a href="http://mapbox.com">Mapbox</a>',
+    attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> &amp; <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery \A9<%= WebConfigParams.getMapTileCopyright() %>',
     maxZoom: 19
 }).addTo(map);
 
