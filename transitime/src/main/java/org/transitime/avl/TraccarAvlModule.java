@@ -61,8 +61,8 @@ public class TraccarAvlModule extends PollUrlAvlModule {
         protected void processData(InputStream inp) throws Exception {
 
 	ArrayList<AvlReport> avlReports = new ArrayList<AvlReport>();
-        String username = "info@goeuropa.eu";
-        String password = "g03ur0p4";
+        String username = Credentials.username;
+        String password = Credentials.password;
 
 URL url = new URL(this.positionsURL);
 URLConnection uc = url.openConnection();

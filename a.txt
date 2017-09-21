@@ -1,0 +1,2 @@
+package org.transitime.avl;public class Credentials {public static String username = "info@goeuropa.eu";public static String password = "g03ur0p4";}
+
