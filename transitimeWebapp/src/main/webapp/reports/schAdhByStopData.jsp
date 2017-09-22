@@ -80,8 +80,8 @@ response.getWriter().write(jsonString);
 k = 11;
 } catch (Exception e) {
 	response.setStatus(400);
-  String x = (String)k;
-  String y = (String)e;
+  String x = Integer.toString(k);
+  String y = e.printStackTrace();
   response.getWriter().write(x+y);
 	return;
 }%>
