@@ -81,7 +81,7 @@ k = 11;
 } catch (Exception e) {
 	response.setStatus(400);
   String x = Integer.toString(k);
-  String y = e.printStackTrace();
+  String y = e.toString();
   response.getWriter().write(x+y);
 	return;
 }%>
