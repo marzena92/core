@@ -18,6 +18,7 @@
 <%@ page import="org.transitime.reports.GenericJsonQuery" %>
 <%@ page import="org.transitime.reports.SqlUtils" %>
 <%
+String s = "x:";
 int k = 0;
 try {
   k = 1;
@@ -63,6 +64,7 @@ String sql =
     // always the same and doesn't provide any ordering info.
     + " GROUP BY directionid, s.name, ad.stoporder \n"
     + " ORDER BY directionid, ad.stoporder, s.name";
+s = sql;
 k = 6;
 // Just for debugging
 System.out.println("\nFor schedule adherence by stop query sql=\n" + sql);
@@ -82,6 +84,6 @@ k = 11;
 	response.setStatus(400);
   String x = Integer.toString(k);
   String y = e.toString();
-  response.getWriter().write(x+y+sql);
+  response.getWriter().write(x+y+s);
 	return;
 }%>
