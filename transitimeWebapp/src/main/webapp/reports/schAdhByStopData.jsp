@@ -18,17 +18,21 @@
 <%@ page import="org.transitime.reports.GenericJsonQuery" %>
 <%@ page import="org.transitime.reports.SqlUtils" %>
 <%
+int k = 0;
 try {
+  k = 1;
 String allowableEarlyStr = request.getParameter("allowableEarly");
 if (allowableEarlyStr == null || allowableEarlyStr.isEmpty())
 	allowableEarlyStr = "1.0";
+  k = 2;
 String allowableEarlyMinutesStr = "'" + SqlUtils.convertMinutesToSecs(allowableEarlyStr) + " seconds'";
-
+k = 3;
 String allowableLateStr = request.getParameter("allowableLate");
 if (allowableLateStr == null || allowableLateStr.isEmpty())
 	allowableLateStr = "4.0";
+  k = 4;
 String allowableLateMinutesStr = "'" + SqlUtils.convertMinutesToSecs(allowableLateStr) + " seconds'";
-
+k = 5;
 String sql =
 	"SELECT "
 	+ "     COUNT(CASE WHEN scheduledtime-time > " + allowableEarlyMinutesStr + " THEN 1 ELSE null END) as early, \n"
@@ -59,18 +63,23 @@ String sql =
     // always the same and doesn't provide any ordering info.
     + " GROUP BY directionid, s.name, ad.stoporder \n"
     + " ORDER BY directionid, ad.stoporder, s.name";
-
+k = 6;
 // Just for debugging
 System.out.println("\nFor schedule adherence by stop query sql=\n" + sql);
 
 // Do the query and return result in JSON format
 String agencyId = request.getParameter("a");
+k = 7;
 String jsonString = GenericJsonQuery.getJsonString(agencyId, sql);
+k = 8;
 response.setContentType("application/json");
+k = 9;
 response.setHeader("Access-Control-Allow-Origin", "*");
+k = 10;
 response.getWriter().write(jsonString);
+k = 11;
 } catch (Exception e) {
 	response.setStatus(400);
-	response.getWriter().write(e.getMessage());
+	response.getWriter().write(k+e;
 	return;
 }%>
