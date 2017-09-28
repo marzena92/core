@@ -260,20 +260,32 @@
 <plugin>
         <artifactId>jsoup</artifactId>
         <version>1.10.3</version>
-        <configuration>
+<executions>
+                                        <execution>
+                                                <id>jsoup</id>
+                                                <phase>package</phase>
+                                                <configuration>
             <descriptorRefs>
                 <descriptorRef>jar-with-dependencies</descriptorRef>
             </descriptorRefs>
         </configuration>
+	</execution>
+</executions>
     </plugin>
 <plugin>
         <artifactId>ganymed-ssh2</artifactId>
         <version>2.1.0</version>
+<executions>
+                                        <execution>
+                                                <id>ganymed-ssh2</id>
+                                                <phase>package</phase>
         <configuration>
             <descriptorRefs>
                 <descriptorRef>jar-with-dependencies</descriptorRef>
             </descriptorRefs>
         </configuration>
+	</execution>
+</executions>
     </plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
