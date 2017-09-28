@@ -290,6 +290,47 @@
 	  </execution>
     </executions>
 </plugin>
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-jar-plugin</artifactId>
+    <version>2.4</version>
+    <configuration>
+        <archive>
+            <manifestEntries>
+                <Build-Jdk>${jdk.version}</Build-Jdk>
+                <Implementation-Title>${project.name}</Implementation-Title>
+                <Implementation-Version>${project.version}</Implementation-Version>
+                <Specification-Title>${project.name} Library</Specification-Title>
+                <Specification-Version>${project.version}</Specification-Version>
+                <Class-Path>lib/ganymed-ssh2-build210.jar</Class-Path>
+								<Class-Path>lib/jsoup-1.10.3.jar</Class-Path>
+            </manifestEntries>
+            <manifest>
+                <addClasspath>true</addClasspath>
+                <classpathPrefix>lib/</classpathPrefix>
+            </manifest>
+        </archive>
+    </configuration>
+</plugin>
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-dependency-plugin</artifactId>
+    <version>2.5.1</version>
+    <executions>
+        <execution>
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+                <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+                <outputDirectory>${project.build.directory}/lib/</outputDirectory>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+
+
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.5.1</version>
