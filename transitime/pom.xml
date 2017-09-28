@@ -257,6 +257,24 @@
 
 	<build>
 		<plugins>
+<plugin>
+        <artifactId>jsoup</artifactId>
+        <version>1.10.3</version>
+        <configuration>
+            <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+            </descriptorRefs>
+        </configuration>
+    </plugin>
+<plugin>
+        <artifactId>ganymed-ssh2</artifactId>
+        <version>2.1.0</version>
+        <configuration>
+            <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+            </descriptorRefs>
+        </configuration>
+    </plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.5.1</version>
