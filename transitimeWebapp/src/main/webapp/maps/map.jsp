@@ -37,11 +37,23 @@
   <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
   <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
 
-  <!--  Override the body style from the includes.jsp/general.css files -->
   <style>
+    /* Override the body style from the includes.jsp/general.css files */
     body {
 	  margin: 0px;
     }
+    
+    /* Set width of route selector. For smaller displays use smaller width */
+    #routes {
+      width: 400px;
+    }
+    
+    @media (max-width:600px) {
+      #routes {
+        width: 300px;
+      }
+    }
+    
   </style>
   
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -64,7 +76,7 @@
         to set the css width here. Yes, strange! -->  
   <div id="routesContainer">
     <div id="routesDiv">
-      <select id="routes" style="width:280px" ></select>	
+      <select id="routes"></select>	
     </div>
   </div>
   
@@ -143,10 +155,13 @@ function predictionCallback(preds, status) {
 	predictionsTimeout = setTimeout(getPredictionsJson, 20000, routeStopPreds.routeShortName, routeStopPreds.stopId);
 
 	// Add route and stop info
-	var content = '<b>Linia:</b> ' + routeStopPreds.routeName + '<br/>' 
-		+ '<b>Przystanek:</b> ' + routeStopPreds.stopName + '<br/>';
+	var stopName = routeStopPreds.stopName;
+	if (routeStopPreds.stopCode)
+		stopName += " (" + routeStopPreds.stopCode + ")";
+	var content = '<b>Route:</b> ' + routeStopPreds.routeName + '<br/>' 
+		+ '<b>Stop:</b> ' + stopName + '<br/>';
 	if (verbose)
-		content += '<b>Id przystanku:</b> ' + routeStopPreds.stopId + '<br/>';
+		content += '<b>Stop Id:</b> ' + routeStopPreds.stopId + '<br/>';
 		
 	// For each destination add predictions
 	for (var i in routeStopPreds.dest) {
@@ -157,7 +172,7 @@ function predictionCallback(preds, status) {
 		
 		// Add the destination/headsign info
 		if (routeStopPreds.dest[i].headsign)
-			content += '<b>Cel:</b> ' + routeStopPreds.dest[i].headsign + '<br/>';
+			content += '<b>Destination:</b> ' + routeStopPreds.dest[i].headsign + '<br/>';
 		
 		// Add each prediction for the current destination
 		if (routeStopPreds.dest[i].pred.length > 0) {
@@ -189,14 +204,14 @@ function predictionCallback(preds, status) {
 				*/
 				// If in verbose mode add vehicle info
 				if (verbose)
-					content += ' <span class="vehicle">(pojazd' + pred.vehicle + ')</span>';
+					content += ' <span class="vehicle">(vehicle ' + pred.vehicle + ')</span>';
 			}
-			content += ' minut';
+			content += ' minutes';
 			
 			content += '</span>';
 		} else {
 			// There are no predictions so let user know
-			content += "Brak danych";
+			content += "No predictions";
 		}
 	}
 	
@@ -364,7 +379,7 @@ function formatSpeed(speedInMetersPerSec) {
 	
 	// Convert m/s to km/hr and truncate to 1 decimal place to make
 	// output pretty
-	return (parseFloat(speedInMetersPerSec) * 3.6).toFixed(1) + " km/h";
+	return (parseFloat(speedInMetersPerSec) * 3.6).toFixed(1) + " km/hr";
 }
 
 /**
@@ -375,33 +390,33 @@ function getVehiclePopupContent(vehicleData) {
     var layoverStr = verbose && vehicleData.layover ? 
 			 ("<br/><b>Layover:</b> " + vehicleData.layover) : "";
     var layoverDepartureStr = vehicleData.layover ? 
-    		 ("<br/><b>Odjazd:</b> " + 
+    		 ("<br/><b>Departure:</b> " + 
     				 dateFormat(vehicleData.layoverDepTime)) : "";
     var nextStopNameStr = vehicleData.nextStopName ? 
-    		 ("<br/><b>Nastepny przystanek:</b> " + vehicleData.nextStopName) : "";
+    		 ("<br/><b>Next Stop:</b> " + vehicleData.nextStopName) : "";
     if (verbose && vehicleData.nextStopId)
-    	nextStopNameStr += "<br/><b>Nastepny przystanek Id:</b> " + vehicleData.nextStopId;
+    	nextStopNameStr += "<br/><b>Next Stop Id:</b> " + vehicleData.nextStopId;
     var driver = vehicleData.driver ? 
-    		"<br/><b>Kierowca:</b> " + vehicleData.driver : "";
-    var latLonHeadingStr = verbose ? "<br/><b>Dlugosc geograf.:</b> " + vehicleData.loc.lat
-    			+ "<br/><b>Szerokosc geograf.:</b> " + vehicleData.loc.lon 
-    			+ "<br/><b>Kierunek:</b> " + vehicleData.loc.heading 
-    			+ "<br/><b>Predkosc:</b> " + formatSpeed(vehicleData.loc.speed)
+    		"<br/><b>Driver:</b> " + vehicleData.driver : "";
+    var latLonHeadingStr = verbose ? "<br/><b>Lat:</b> " + vehicleData.loc.lat
+    			+ "<br/><b>Lon:</b> " + vehicleData.loc.lon 
+    			+ "<br/><b>Heading:</b> " + vehicleData.loc.heading 
+    			+ "<br/><b>Speed:</b> " + formatSpeed(vehicleData.loc.speed)
     			: "";
 	var gpsTimeStr = dateFormat(vehicleData.loc.time);
-    var directionStr = verbose ? "<br/><b>Kierunek:</b> " + vehicleData.direction : ""; 
-    var tripPatternStr = verbose ? "<br/><b>Wzorzec kursu:</b> " + vehicleData.tripPattern : "";
-    var startTimeStr = vehicleData.isScheduledService ? "" : "<br/><b>Czas startu:</b> "+dateFormat(vehicleData.freqStartTime/1000);
-    var schAdhStr = vehicleData.isScheduledService ? "<br/><b>Odchylenie:</b> " + vehicleData.schAdhStr : ""
-    var content = "<b>Pojazd:</b> " + vehicleData.id 
-    	+ "<br/><b>Linia: </b> " + vehicleData.routeShortName
+    var directionStr = verbose ? "<br/><b>Direction:</b> " + vehicleData.direction : ""; 
+    var tripPatternStr = verbose ? "<br/><b>Trip Pattern:</b> " + vehicleData.tripPattern : "";
+    var startTimeStr = vehicleData.isScheduledService ? "" : "<br/><b>Start Time:</b> "+dateFormat(vehicleData.freqStartTime/1000);
+    var schAdhStr = vehicleData.isScheduledService ? "<br/><b>SchAdh:</b> " + vehicleData.schAdhStr : ""
+    var content = "<b>Vehicle:</b> " + vehicleData.id 
+    	+ "<br/><b>Route: </b> " + vehicleData.routeShortName
 		+ latLonHeadingStr
-		+ "<br/><b>Czas GPS:</b> " + gpsTimeStr
-		+ "<br/><b>Kierunek:</b> " + vehicleData.headsign
+		+ "<br/><b>GPS Time:</b> " + gpsTimeStr
+		+ "<br/><b>Headsign:</b> " + vehicleData.headsign
 		+ directionStr 
 		+ schAdhStr 
-		+ "<br/><b>Zadanie ( grupa zadan ):</b> " + vehicleData.block
-		+ "<br/><b>Kurs:</b> " + vehicleData.trip
+		+ "<br/><b>Block:</b> " + vehicleData.block
+		+ "<br/><b>Trip:</b> " + vehicleData.trip
 		+ tripPatternStr
 		+ startTimeStr
 		+ layoverStr
@@ -448,6 +463,8 @@ function getVehicleMarkerBackgroundOptions(vehicleData) {
 	var vehicleIcon = busIcon;
 	if (vehicleData.vehicleType == "0")
 		vehicleIcon = streetcarIcon;
+	else if (vehicleData.vehicleType == "1")
+		vehicleIcon = subwayIcon;
 	else if (vehicleData.vehicleType == "2")
 		vehicleIcon = railIcon;
 	else if (vehicleData.vehicleType == "4")
@@ -792,8 +809,9 @@ function animateVehicle(vehicleMarker, origLat, origLon, newLat, newLon) {
 function updateVehiclesUsingApiData() {
 	// If route not yet configured then simply return. Don't want to read
 	// in all vehicles for agency!
-	if (!getRouteQueryStrParam())
-		return;
+	// FIXME
+	//if (!getRouteQueryStrParam())
+	//	return;
 	
 	var url = apiUrlPrefix + "/command/vehiclesDetails?" + getRouteQueryStrParam();
 	// If stop specified as query str param to this page pass it to the 
@@ -839,8 +857,8 @@ L.control.zoom({position: 'bottomleft'}).addTo(map);
 var mapTileUrl = '<%= WebConfigParams.getMapTileUrl() %>'; 
 L.tileLayer(mapTileUrl, {
 	// Specifying a shorter version of attribution. Original really too long.
-    //attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery \A9 <a href="http://mapbox.com">Mapbox</a>',
-    attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> &amp; <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery \A9<%= WebConfigParams.getMapTileCopyright() %>',
+    //attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> &amp; <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery ©<%= WebConfigParams.getMapTileCopyright() %>',
     maxZoom: 19
 }).addTo(map);
 
@@ -865,6 +883,13 @@ map.on('popupclose', function(e) {
 // and set map bounds to the agency extent if route not specified in query string
 $.getJSON(apiUrlPrefix + "/command/agencyGroup", 
 		function(agencies) {
+			// If agency not defined, such as when just testing AVL feed,
+			// then set map to United States
+			if (agencies.agency.length == 0) {
+				map.fitBounds([[25.0, -130.0], [55.0, -70.0]]);
+				return;
+			}
+			
 	        agencyTimezoneOffset = agencies.agency[0].timezoneOffsetMinutes;
 			
 	        // Fit the map initially to the agency, but only if route not
@@ -884,7 +909,7 @@ setRouteQueryStrParamViaQueryStr();
 if (!getRouteQueryStrParam()) {
   // Route not specified in query string. Therefore populate the route 
   // selector if route not specified in query string.
-  $.getJSON(apiUrlPrefix + "/command/routes", 
+  $.getJSON(apiUrlPrefix + "/command/routes?keepDuplicates=true", 
  		function(routes) {
 	        // Generate list of routes for the selector
 	 		var selectorData = [{id: '', text: 'Select Route'}];
@@ -929,9 +954,15 @@ if (!getRouteQueryStrParam()) {
  		 			// make sure this annoying tooltip doesn't popup.
  		 			$( "#select2-routes-container" ).tooltip({ content: 'foo' });
  		 			$( "#select2-routes-container" ).tooltip("option", "disabled", true);
-
 				});
 
+	 		// If showing unassigned vehicles then start getting vehicle 
+	 		// location data now instead instead of waiting till route selected.
+	 		if (getQueryVariable("showUnassignedVehicles")) {
+	 			updateVehiclesUsingApiData();
+	 		}
+	 		
+	 		// of waiting 
  			// Set focus to selector so that user can simply start
  			// typing to select a route. Can't use something like
  			// '#routes' since select2 changes  the input element to a
