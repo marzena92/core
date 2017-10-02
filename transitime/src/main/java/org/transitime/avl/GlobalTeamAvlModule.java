@@ -206,8 +206,8 @@ for (int temp = 0; temp < nList.getLength(); temp++) {
 		//System.out.println("data:"+vehicleId+ timestamp.getTime()+ latitude+longitude+ heading+ speed);
 
 			AvlReport avlReport =
-									 new AvlReport("GTavltest", cal.getTime().getTime(), latitude,
-																		longitude, heading, speed, "GTavltest");
+									 new AvlReport(vehicleId, cal.getTime().getTime(), latitude,
+																		longitude, heading, speed, vehicleId);
 			processAvlReport(avlReport);
 			avlReports.add(avlReport);
 	}
