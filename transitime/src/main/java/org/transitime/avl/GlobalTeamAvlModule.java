@@ -196,9 +196,9 @@ for (int temp = 0; temp < nList.getLength(); temp++) {
 		String time = eElement.getElementsByTagName("TimeOfRecord").item(0).getTextContent();
 
 						//2016-09-07 17:02:48
-		SimpleDateFormat dateformater=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-		if ( time.contains("2099") == true )
-			continue;
+		SimpleDateFormat dateformater=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		/*if ( time.contains("2099") == true )
+			continue;*/
 						Date timestamp=dateformater.parse(time.replace( "T" , " " ));
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(timestamp);
