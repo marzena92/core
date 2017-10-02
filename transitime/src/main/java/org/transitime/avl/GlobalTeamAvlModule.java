@@ -134,13 +134,14 @@ public class GlobalTeamAvlModule extends PollUrlAvlModule {
 
 	try {
             Thread.sleep(3000);
-						r.executeBashCommand("docker cp /home/onebusaway/gps.xml transitime-server-instance:/gps.xml");
+						//r.executeBashCommand("docker cp /home/onebusaway/gps.xml transitime-server-instance:/gps.xml");
          } catch (Exception e) {
             System.out.println(e);
          }
 	try {
 
-File fXmlFile = new File("gps.xml");
+java.net.URL url = new URL("http://kiedybus.pl/rozklady/gps/gps.xml");
+File fXmlFile = new File(url.getFile());
 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 Document doc = dBuilder.parse(fXmlFile);
