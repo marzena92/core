@@ -141,7 +141,21 @@ public class GlobalTeamAvlModule extends PollUrlAvlModule {
 	try {
 
 java.net.URL url = new URL("http://kiedybus.pl/rozklady/gps/gps.xml");
-File fXmlFile = new File(url.getFile());
+URLConnection connection = url.openConnection();
+InputStream in = connection.getInputStream();
+FileOutputStream fos = new FileOutputStream(new File("gps.xml"));
+byte[] buf = new byte[512];
+while (true) {
+    int len = in.read(buf);
+    if (len == -1) {
+        break;
+    }
+    fos.write(buf, 0, len);
+}
+in.close();
+fos.flush();
+fos.close();
+File fXmlFile = new File("gps.xml");
 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 Document doc = dBuilder.parse(fXmlFile);
