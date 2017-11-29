@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+  
 <%@include file="/template/includes.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Specify Parameters</title>
@@ -18,7 +19,7 @@
    	  location.href = url;
     }
   </script>
-  
+
 </head>
 <body>
 
@@ -27,14 +28,14 @@
 <div id="title">
    Select Parameters for Agencies API
 </div>
-   
-<div id="mainDiv">   
+
+<div id="mainDiv">
    <%-- Create json/xml format radio buttons --%>
    <jsp:include page="../params/jsonXmlFormat.jsp" />
-   
-   <%-- Create submit button --%> 
+
+   <%-- Create submit button --%>
    <jsp:include page="../params/submitApiCall.jsp" />
-   
+
 </div>
 
 </body>

@@ -24,7 +24,7 @@ if (agencyId == null || agencyId.isEmpty()) {
 /* Programatically create contents of table */
 function dataReadCallback(jsonData) {
 	var table = document.getElementById("dataTable");
-	
+
 	for (var i=0; i<jsonData.data.length; ++i) {
 		var vehicleInfo = jsonData.data[i];
 

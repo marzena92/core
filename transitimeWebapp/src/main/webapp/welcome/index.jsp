@@ -6,14 +6,14 @@
 <html>
 <head>
   <%@include file="/template/includes.jsp" %>
-  
+
   <style>
   /* center the table */
   #agencyList {
     margin-left: auto;
     margin-right: auto;
   }
-  
+
   table {
   	border-spacing: 0px;
   }
@@ -25,7 +25,7 @@
   	padding-bottom: 4px;
   	text-align: left;
   }
-  
+
   /* Alternate row colors to make table more readable */
   tr:nth-child(odd) {background: #F6F6F6}
   tr:nth-child(even) {background: #EBEBEB}
@@ -37,9 +37,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  	
+
   </style>
-    
+
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Agencies</title>
 </head>
@@ -47,7 +47,7 @@
 <body>
 <%@include file="/template/header.jsp" %>
 <div id="mainDiv">
-<div id="title">Agencies</div>
+<div id="title"><fmt:message key="div.agencies" /></div>
 <table id="agencyList">
 <%
 // Output links for all the agencies
@@ -59,11 +59,11 @@ for (WebAgency webAgency : webAgencies) {
 	%>
 	<tr>
 	  <td><div id=agencyName><%= webAgency.getAgencyName() %></div></td>
-	  <td><a href="<%= request.getContextPath() %>/maps/index.jsp?a=<%= webAgency.getAgencyId() %>" title="Real-time maps">Maps</a></td>
-	  <td><a href="<%= request.getContextPath() %>/reports/index.jsp?a=<%= webAgency.getAgencyId() %>" title="Reports on historic information">Reports</a></td>
-	  <td><a href="<%= request.getContextPath() %>/reports/apiCalls/index.jsp?a=<%= webAgency.getAgencyId() %>" title="API calls">API</a></td>
-	  <td><a href="<%= request.getContextPath() %>/status/index.jsp?a=<%= webAgency.getAgencyId() %>" title="Pages showing current status of system">Status</a></td>
-	  <td><a href="<%= request.getContextPath() %>/extensions/index.jsp?a=<%= webAgency.getAgencyId() %>" title="Page of links to extension to the system">Extensions</a></td>
+	  <td><a href="<%= request.getContextPath() %>/maps/index.jsp?a=<%= webAgency.getAgencyId() %>" title="Real-time maps"><fmt:message key="div.maps" /></a></td>
+	  <td><a href="<%= request.getContextPath() %>/reports/index.jsp?a=<%= webAgency.getAgencyId() %>" title="Reports on historic information"><fmt:message key="div.reports" /></a></td>
+	  <td><a href="<%= request.getContextPath() %>/reports/apiCalls/index.jsp?a=<%= webAgency.getAgencyId() %>" title="API calls"><fmt:message key="div.api" /></a></td>
+	  <td><a href="<%= request.getContextPath() %>/status/index.jsp?a=<%= webAgency.getAgencyId() %>" title="Pages showing current status of system"><fmt:message key="div.status" /></a></td>
+	  <td><a href="<%= request.getContextPath() %>/extensions/index.jsp?a=<%= webAgency.getAgencyId() %>" title="Page of links to extension to the system"><fmt:message key="div.extensions" /></a></td>
 	</tr>
 	<%
 }

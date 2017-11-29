@@ -1,12 +1,7 @@
 <%@page import="org.transitime.db.webstructs.WebAgency"%>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>    
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<c:set var="language" value="" scope="session" />
-<fmt:setLocale value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" />
-<fmt:setBundle basename="org.transitclock.i18n.text" />
+    pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd" lang="${language}">
 <%
 String agencyId = request.getParameter("a");
@@ -18,14 +13,13 @@ if (agencyId == null || agencyId.isEmpty()) {
 <html>
 <head>
   <%@include file="/template/includes.jsp" %>
-    
+
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Historical Reports</title>
 </head>
 <body>
 <%@include file="/template/header.jsp" %>
 <div id="mainDiv">
-            Swiecie:<label for="welcome"><fmt:message key="hello.label.welcome" /></label>
 <div id="title">Historical Reports for <%= WebAgency.getCachedWebAgency(agencyId).getAgencyName() %></div>
 
 <div id="subtitle">Prediction Accuracy<br/><span style="font-size: small">(only for agencies where prediction accuracy stored to database)</span></div>
@@ -35,13 +29,13 @@ if (agencyId == null || agencyId.isEmpty()) {
     to within the specified limits.">
       Prediction Accuracy Range Chart</a></li>
   <li><a href="predAccuracyIntervalsParams.jsp?a=<%= agencyId %>"
-    title="Shows average prediction accuracy for each prediction length. Also 
-hows upper and lower bounds. Allows one to see for a specified percentage 
-what the prediction accuracy is for predictions that lie between the 
+    title="Shows average prediction accuracy for each prediction length. Also
+hows upper and lower bounds. Allows one to see for a specified percentage
+what the prediction accuracy is for predictions that lie between the
 specified accuracy range.">
       Prediction Accuracy Interval Chart</a></li>
-  <li><a href="predAccuracyScatterParams.jsp?a=<%= agencyId %>" 
-    title="Shows each individual datapoint for prediction accuracy. Useful for 
+  <li><a href="predAccuracyScatterParams.jsp?a=<%= agencyId %>"
+    title="Shows each individual datapoint for prediction accuracy. Useful for
 finding specific issues with predictions.">
       Prediction Accuracy Scatter Plot</a></li>
   <li><a href="predAccuracyCsvParams.jsp?a=<%= agencyId %>"
@@ -52,12 +46,12 @@ finding specific issues with predictions.">
 <div id="subtitle">Schedule Adherence Reports</div>
 <ul class="choicesList">
   <li><a href="schAdhByRouteParams.jsp?a=<%= agencyId %>"
-    title="Displays historic schedule adherence data by route in a bar chart. 
+    title="Displays historic schedule adherence data by route in a bar chart.
     Can compare schedule adherence for multiple routes.">
       Schedule Adherence by Route</a></li>
   <li><a href="schAdhByTimeParams.jsp?a=<%= agencyId %>"
-    title="Displays historic schedule adherence data for a route grouped by 
-    how early/late. The resulting bell curve shows the distribution of 
+    title="Displays historic schedule adherence data for a route grouped by
+    how early/late. The resulting bell curve shows the distribution of
     early/late times. ">
       Schedule Adherence by how Early/Late</a></li>
 </ul>
@@ -81,7 +75,7 @@ finding specific issues with predictions.">
     title="Displays in a table the schedule for a specified route.">
       Schedule for Route</a></li>
   <li><a href="scheduleVertStopsParams.jsp?a=<%= agencyId %>"
-    title="Displays in a table the schedule for a specified route. Stops listed 
+    title="Displays in a table the schedule for a specified route. Stops listed
     vertically which is useful for when there are not that many trips per day.">
       Schedule for Route (vertical stops)</a></li>
 </ul>

@@ -6,7 +6,7 @@
 <%-- Load in JQuery UI javascript and css to set general look and feel, such as for tooltips --%>
 <script src="<%= request.getContextPath() %>/jquery-ui/jquery-ui.js"></script>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/jquery-ui/jquery-ui.css">
-  
+
 <%-- Load in Transitime css and javascript libraries. Do this after jquery files
      loaded so can override those parameters as necessary. --%>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/general.css">
@@ -22,3 +22,8 @@ var apiKey = "f78a2e9a";
 var apiUrlPrefixAllAgencies = "/api/v1/key/" + apiKey;
 var apiUrlPrefix = apiUrlPrefixAllAgencies + "/agency/<%= request.getParameter("a") %>";
 </script>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="language" value="" scope="session" />
+<fmt:setLocale value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" />
+<fmt:setBundle basename="org.transitclock.i18n.text" />
