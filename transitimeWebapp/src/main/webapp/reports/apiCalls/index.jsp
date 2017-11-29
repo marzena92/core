@@ -14,13 +14,13 @@ if (agencyId == null || agencyId.isEmpty()) {
 <head>
 <%@include file="/template/includes.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>API Calls</title>
+<title><fmt:message key="div.apicalls" /></title>
 </head>
 <body>
 <%@include file="/template/header.jsp" %>
 <div id="mainDiv">
-<div id="title">API Calls for <%= WebAgency.getCachedWebAgency(agencyId).getAgencyName() %></div>
-<div id="subtitle" style="margin-bottom: 20px;">Note: This is a only a partial list of the API calls</div>
+<div id="title"><fmt:message key="div.apicallsfor" /><%= WebAgency.getCachedWebAgency(agencyId).getAgencyName() %></div>
+<div id="subtitle" style="margin-bottom: 20px;"><fmt:message key="div.notethisis" /></div>
 <div id="subtitle">Agency Specific API calls</div>
 <ul class="choicesList">
   <li><a href="routeApiParams.jsp?a=<%= agencyId %>"
