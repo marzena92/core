@@ -15,7 +15,7 @@ if (agencyId == null || agencyId.isEmpty()) {
   <%@include file="/template/includes.jsp" %>
 
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Historical Reports</title>
+<title><fmt:message key="div.historical" /></title>
 </head>
 <body>
 <%@include file="/template/header.jsp" %>
