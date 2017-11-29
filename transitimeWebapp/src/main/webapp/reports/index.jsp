@@ -2,7 +2,12 @@
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>    
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="language" value="pl" scope="session" />
+<fmt:setLocale value="${language}" />
+<fmt:setBundle basename="org.transitclock.i18n.text" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd" lang="${language}">
 <%
 String agencyId = request.getParameter("a");
 if (agencyId == null || agencyId.isEmpty()) {
@@ -20,6 +25,7 @@ if (agencyId == null || agencyId.isEmpty()) {
 <body>
 <%@include file="/template/header.jsp" %>
 <div id="mainDiv">
+            Swiecie:<label for="welcome"><fmt:message key="hello.label.welcome" /></label>
 <div id="title">Historical Reports for <%= WebAgency.getCachedWebAgency(agencyId).getAgencyName() %></div>
 
 <div id="subtitle">Prediction Accuracy<br/><span style="font-size: small">(only for agencies where prediction accuracy stored to database)</span></div>

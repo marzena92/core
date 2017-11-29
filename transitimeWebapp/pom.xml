@@ -30,6 +30,11 @@
 			<artifactId>transitimeCore</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+<dependency>
+    <groupId>org.glassfish.web</groupId>
+    <artifactId>javax.servlet.jsp.jstl</artifactId>
+    <version>1.2.4</version>
+</dependency>
 	</dependencies>
 	<build>
 		<!-- Set the name of the war file -->
