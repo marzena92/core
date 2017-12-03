@@ -5,12 +5,12 @@
 <head>
 <%@include file="/template/includes.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Specify Parameters</title>
+<title><fmt:message key="div.specifyparametrs19" /></title>
 
   <!-- Load in Select2 files so can create fancy route selector -->
   <link href="../../select2/select2.css" rel="stylesheet"/>
   <script src="../../select2/select2.min.js"></script>
-  
+
   <link href="../params/reportParams.css" rel="stylesheet"/>
 
   <script>
@@ -23,7 +23,7 @@
    	  location.href = url;
     }
   </script>
-  
+
 </head>
 <body>
 
@@ -32,13 +32,13 @@
 <div id="title">
    Select Parameters for routes API
 </div>
-   
-<div id="mainDiv">   
+
+<div id="mainDiv">
    <%-- Create json/xml format radio buttons --%>
    <jsp:include page="../params/jsonXmlFormat.jsp" />
-   
-   <%-- Create submit button --%> 
-   <jsp:include page="../params/submitApiCall.jsp" />    
+
+   <%-- Create submit button --%>
+   <jsp:include page="../params/submitApiCall.jsp" />
 </div>
 
 </body>

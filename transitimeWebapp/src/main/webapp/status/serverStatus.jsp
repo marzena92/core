@@ -18,23 +18,23 @@ if (agencyId == null || agencyId.isEmpty()) {
 <html>
 <head>
   <%@include file="/template/includes.jsp" %>
-  
+
   <style>
   	h3, .content {
   		margin-left: 20%;
   		margin-right: 20%;
   	}
   </style>
-  
+
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Server Status</title>
+<title><fmt:message key="div.serwerstatus" /></title>
 </head>
 <body>
 <%@include file="/template/header.jsp" %>
 <div id="title">Server Status for <%= WebAgency.getCachedWebAgency(agencyId).getAgencyName() %></div>
 
 <%
-ServerStatusInterface serverStatusInterface = 
+ServerStatusInterface serverStatusInterface =
 org.transitime.ipc.clients.ServerStatusInterfaceFactory.get(agencyId);
 try {
   List<MonitorResult> monitorResults = serverStatusInterface.get().getMonitorResults();

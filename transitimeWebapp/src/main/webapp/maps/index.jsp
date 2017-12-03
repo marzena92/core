@@ -12,24 +12,24 @@ if (agencyId == null || agencyId.isEmpty()) {
 %>
 <html>
 <head>
-<%@include file="/template/includes.jsp" %> 
+<%@include file="/template/includes.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Status Pages</title>
+<title><fmt:message key="div.statuspages" /></title>
 </head>
 <body>
 <%@include file="/template/header.jsp" %>
 <div id="mainDiv">
-<div id="title">Real-time Maps for <%= WebAgency.getCachedWebAgency(agencyId).getAgencyName() %></div>
+<div id="title"><fmt:message key="div.realtime" /> <%= WebAgency.getCachedWebAgency(agencyId).getAgencyName() %></div>
 <ul class="choicesList">
   <li><a href="../maps/map.jsp?a=<%= agencyId %>"
     title="Real-time map for selected route">
-      Map for Selected Route</a></li>
+      <fmt:message key="div.mapfor" /></a></li>
   <li><a href="../maps/map.jsp?a=<%= agencyId %>&showUnassignedVehicles=true"
     title="Real-time map for selected route but also shows vehicles not currently assigned to a route">
-      Map Including Unassigned Vehicles</a></li>
+      <fmt:message key="div.mapincluding" /></a></li>
   <li><a href="../maps/schAdhMap.jsp?a=<%= agencyId %>"
     title="Shows current real-time schedule adherence of vehicles in map">
-      Schedule Adherence Map</a></li>
+      <fmt:message key="div.scheduleadherence" /></a></li>
 </ul>
 </div>
 </body>

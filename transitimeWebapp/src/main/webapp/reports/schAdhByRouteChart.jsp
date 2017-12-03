@@ -42,7 +42,7 @@
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Schedule Adherence</title>
+<title><fmt:message key="div.scheduleadherence2" /></title>
 </head>
 <body>
   <%@include file="/template/header.jsp" %>

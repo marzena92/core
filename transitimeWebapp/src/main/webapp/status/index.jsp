@@ -12,9 +12,9 @@ if (agencyId == null || agencyId.isEmpty()) {
 %>
 <html>
 <head>
-<%@include file="/template/includes.jsp" %> 
+<%@include file="/template/includes.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Status Pages</title>
+<title><fmt:message key="div.statuspages" /></title>
 </head>
 <body>
 <%@include file="/template/header.jsp" %>

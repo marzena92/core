@@ -10,7 +10,7 @@
   <fmt:setBundle basename="org.transitclock.i18n.text" />
 <%@include file="/template/includes.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Specify Parameters</title>
+<title><fmt:message key="div.specifyparametrs18" /></title>
 
   <!-- Load in Select2 files so can create fancy route selector -->
   <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />

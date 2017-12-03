@@ -13,7 +13,7 @@ if (agencyId == null || agencyId.isEmpty()) {
 <head>
   <%@include file="/template/includes.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Last GPS Reports for Vehicles</title>
+<title><fmt:message key="div.lastgpsreports" /></title>
 
 <style>
 

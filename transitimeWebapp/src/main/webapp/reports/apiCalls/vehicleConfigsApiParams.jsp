@@ -5,7 +5,7 @@
 <head>
 <%@include file="/template/includes.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Specify Parameters</title>
+<title><fmt:message key="div.specifyparametrs27" /></title>
 
   <link href="../params/reportParams.css" rel="stylesheet"/>
 
@@ -18,7 +18,7 @@
    	  location.href = url;
     }
   </script>
-  
+
 </head>
 <body>
 
@@ -27,14 +27,14 @@
 <div id="title">
    Select Parameters for Vehicle Configurations API
 </div>
-   
-<div id="mainDiv">   
+
+<div id="mainDiv">
    <%-- Create json/xml format radio buttons --%>
    <jsp:include page="../params/jsonXmlFormat.jsp" />
-   
-   <%-- Create submit button --%> 
+
+   <%-- Create submit button --%>
    <jsp:include page="../params/submitApiCall.jsp" />
-   
+
 </div>
 
 </body>

@@ -107,7 +107,7 @@ if (agencyId == null || agencyId.isEmpty()) {
   </script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Schedule Report</title>
+<title><fmt:message key="div.scgedulareport" /></title>
 </head>
 <body>
 <%@include file="/template/header.jsp" %>

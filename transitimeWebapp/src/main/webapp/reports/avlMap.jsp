@@ -81,7 +81,7 @@
 
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
-  <title>AVL Data Map</title>
+  <title><fmt:message key="div.avldata" /></title>
 
   <script>
 

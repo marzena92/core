@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="org.transitime.web.WebConfigParams"%>
 
-<!-- 
+<!--
  Query String parameters:
    a=AGENCY (required)
    r=ROUTE (optional, if not specified then a route selector is created)
@@ -16,9 +16,9 @@
 <head>
   <!-- So that get proper sized map on iOS mobile device -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  
+
   <link rel="stylesheet" href="css/mapUi.css" />
- 
+
   <!-- Load javascript and css files -->
   <%@include file="/template/includes.jsp" %>
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
@@ -32,7 +32,7 @@
     <link rel="stylesheet" href="css/mbtaMapUi.css" />
     <script src="javascript/mbtaMapUiOptions.js"></script>
   <% } %>
-  
+
   <!-- Load in Select2 files so can create fancy selectors -->
   <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
   <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
@@ -43,10 +43,10 @@
 	  margin: 0px;
     }
   </style>
-  
+
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-  
-  <title>Transitime Map</title>
+
+  <title><fmt:message key="div.transitimemaps" /></title>
 </head>
 
 <body>
@@ -56,18 +56,18 @@
   <div id="titleContainer">
     <div id="mapTitle"></div>
   </div>
-  
+
   <!--  Wanted to center the routes selector horizontally but couldn't get
         it to work. Got problems with the map not fitting page properly
         when tried to use fancy position absolute and relative css.
         Also, found that only way to set width of route selector is
-        to set the css width here. Yes, strange! -->  
+        to set the css width here. Yes, strange! -->
   <div id="routesContainer">
     <div id="routesDiv">
-      <select id="routes" style="width:280px" ></select>	
+      <select id="routes" style="width:280px" ></select>
     </div>
   </div>
-  
+
 </body>
 
 <script>
@@ -82,7 +82,7 @@ var agencyTimezoneOffset;
 function dateFormat(time) {
 	var localTimezoneOffset = (new Date()).getTimezoneOffset();
 	var timezoneDiffMinutes = localTimezoneOffset - agencyTimezoneOffset;
-	
+
 	var offsetDate = new Date(parseInt(time)*1000 + timezoneDiffMinutes*60*1000);
 	// Use jquery-dateFormat javascript library
 	return $.format.date(offsetDate, 'HH:mm:ss');
@@ -112,9 +112,9 @@ function setRouteQueryStrParamViaQueryStr() {
 	 	routeQueryStrParam =  null;
 		return;
 	}
-	 
+
 	if (getQueryVariable("r"))
-		routeQueryStrParam = "r=" + getQueryVariable("r");	
+		routeQueryStrParam = "r=" + getQueryVariable("r");
 }
 
 // For keeping track the predictions popup so can update content
@@ -133,47 +133,47 @@ var avlTimer = null;
  */
 function predictionCallback(preds, status) {
 	// If predictions popup was closed then don't do anything
-	if (predictionsPopup == null) 
+	if (predictionsPopup == null)
 		return;
-	
+
 	// There will be predictions for just a single route/stop
 	var routeStopPreds = preds.predictions[0];
-	
+
 	// Set timeout to update predictions again in few seconds
 	predictionsTimeout = setTimeout(getPredictionsJson, 20000, routeStopPreds.routeShortName, routeStopPreds.stopId);
 
 	// Add route and stop info
-	var content = '<b>Route:</b> ' + routeStopPreds.routeName + '<br/>' 
+	var content = '<b>Route:</b> ' + routeStopPreds.routeName + '<br/>'
 		+ '<b>Stop:</b> ' + routeStopPreds.stopName + '<br/>';
 	if (verbose)
 		content += '<b>Stop Id:</b> ' + routeStopPreds.stopId + '<br/>';
-		
+
 	// For each destination add predictions
 	for (var i in routeStopPreds.dest) {
 		// If there are several destinations then add a horizontal rule
 		// to break predictions up by destination
 		if (routeStopPreds.dest.length > 1)
 			content += '<hr/>';
-		
+
 		// Add the destination/headsign info
 		if (routeStopPreds.dest[i].headsign)
 			content += '<b>Destination:</b> ' + routeStopPreds.dest[i].headsign + '<br/>';
-		
+
 		// Add each prediction for the current destination
 		if (routeStopPreds.dest[i].pred.length > 0) {
 			content += '<span class="prediction">';
-			
+
 			for (var j in routeStopPreds.dest[i].pred) {
 				// Separators between the predictions
 				if (j == 1)
 					content += ', ';
 				else if (j ==2)
 					content += ' & '
-					
+
 				// Add the actual prediction
 				var pred = routeStopPreds.dest[i].pred[j];
 				content += pred.min;
-				
+
 				// Added any special indicators for if schedule based,
 				// delayed, or not yet departed from terminal
 				/*
@@ -183,7 +183,7 @@ function predictionCallback(preds, status) {
 					if (pred.notYetDeparted)
 						content += '<sup>not yet left</sup>';
 					else
-						if (pred.delayed) 
+						if (pred.delayed)
 							content += '<sup>delayed</sup>';
 				}
 				*/
@@ -192,14 +192,14 @@ function predictionCallback(preds, status) {
 					content += ' <span class="vehicle">(vehicle ' + pred.vehicle + ')</span>';
 			}
 			content += ' minutes';
-			
+
 			content += '</span>';
 		} else {
 			// There are no predictions so let user know
 			content += "No predictions";
 		}
 	}
-	
+
 	// Now update popup with the wonderful prediction info
 	predictionsPopup.setContent(content);
 }
@@ -209,9 +209,9 @@ function predictionCallback(preds, status) {
  */
 function getPredictionsJson(routeShortName, stopId) {
 	// JSON request of predicton data
-	var url = apiUrlPrefix + "/command/predictions?rs=" + routeShortName 
+	var url = apiUrlPrefix + "/command/predictions?rs=" + routeShortName
 			+ encodeURIComponent("|") + stopId;
-	$.getJSON(url, predictionCallback);	
+	$.getJSON(url, predictionCallback);
 }
 
 /**
@@ -221,7 +221,7 @@ function getPredictionsJson(routeShortName, stopId) {
 function showStopPopup(stopMarker) {
 	// JSON request of predicton data
 	getPredictionsJson(stopMarker.routeShortName, stopMarker.stop.id);
-    
+
 	// Create popup in proper place but content will be added in predictionCallback()
 	predictionsPopup = L.popup(stopPopupOptions)
 		.setLatLng(stopMarker.getLatLng())
@@ -246,8 +246,8 @@ function routeConfigCallback(routesData, status) {
 
 	// Only working with single route at a time for now
 	var route = routesData.routes[0];
-	
-	// Draw stops for the route. Do stops before paths so that when call  
+
+	// Draw stops for the route. Do stops before paths so that when call
 	// bringToBack() the stops will end up being on top.
 	var locsToFit = [];
 	var firstNonMinorStop = true;
@@ -266,19 +266,19 @@ function routeConfigCallback(routesData, status) {
 			// Keep track of non-minor stop locations so can fit map to show them all
 			if (!stop.minor)
 				locsToFit.push(L.latLng(stop.lat, stop.lon));
-			
+
 			// Create the stop Marker
 			var stopMarker = L.circleMarker([stop.lat,stop.lon], options).addTo(map);
-			
+
 			routeFeatureGroup.addLayer(stopMarker);
-			
+
 			// Store stop data obtained via AJAX with stopMarker so it can be used in popup
 			stopMarker.stop = stop;
-			
-			// Store routeShortName obtained via AJAX with stopMarker so can be 
+
+			// Store routeShortName obtained via AJAX with stopMarker so can be
 			// used to get predictions for stop/route
 			stopMarker.routeShortName = route.shortName;
-			
+
 			// When user clicks on stop popup information box
 			stopMarker.on('click', function(e) {
 				showStopPopup(this);
@@ -290,23 +290,23 @@ function routeConfigCallback(routesData, status) {
 	for (var i=0; i<route.shape.length; ++i) {
 		var shape = route.shape[i];
 		var options = shape.minor ? minorShapeOptions : shapeOptions;
-		
-		var latLngs = [];		
+
+		var latLngs = [];
 		for (var j=0; j<shape.loc.length; ++j) {
-			var loc = shape.loc[j];			
+			var loc = shape.loc[j];
 			latLngs.push(L.latLng(loc.lat, loc.lon));
 		}
 		var polyline = L.polyline(latLngs, options).addTo(map);
-		
+
 		routeFeatureGroup.addLayer(polyline);
-		
+
 		// Store shape data obtained via AJAX with polyline so it can be used in popup
 		polyline.shape = shape;
-		
+
 		// Popup trip pattern info when user clicks on path
 		if (verbose) {
 			polyline.on('click', function(e) {
-				var content = "<b>TripPattern:</b> " + this.shape.tripPattern 
+				var content = "<b>TripPattern:</b> " + this.shape.tripPattern
 					+ "<br/><b>Headsign:</b> " + this.shape.headsign;
 				L.popup(tripPatternPopupOptions)
 					.setLatLng(e.latlng)
@@ -314,9 +314,9 @@ function routeConfigCallback(routesData, status) {
 					.openOn(map);}
 						 );
 		}
-		
+
 	}
-	
+
 	// Add all of the paths and stops to the map at once via the FeatureGroup
 	routeFeatureGroup.addTo(map);
 
@@ -324,17 +324,17 @@ function routeConfigCallback(routesData, status) {
 	// is also returned. Use this vehicle location when fitting bounds of map
 	// so that user will always see the next vehicle coming.
 	if (route.locationOfNextPredictedVehicle) {
-		locsToFit.push(L.latLng(route.locationOfNextPredictedVehicle.lat, 
+		locsToFit.push(L.latLng(route.locationOfNextPredictedVehicle.lat,
 				route.locationOfNextPredictedVehicle.lon));
 	}
-	
+
 	// Get map to fit route
 	map.fitBounds(locsToFit);
-	
+
 	// It can happen that vehicles get drawn before the route paths & stops.
 	// In this case need call bringToBack() on the paths and stops so that
 	// the vehicles will be drawn on top.
-	// Note: bringToBack() must be called after map is first specified 
+	// Note: bringToBack() must be called after map is first specified
 	// via fitBounds() or other such method.
 	routeFeatureGroup.bringToBack();
 }
@@ -342,14 +342,14 @@ function routeConfigCallback(routesData, status) {
 var vehicleMarkers = [];
 
 /**
- * Gets vehicle marker from the array vehicleIcons 
+ * Gets vehicle marker from the array vehicleIcons
  */
 function getVehicleMarker(vehicleId) {
 	for (var i=0; i<vehicleMarkers.length; ++i) {
 		if (vehicleMarkers[i].vehicleData.id == vehicleId)
 			return vehicleMarkers[i];
-	}	
-	
+	}
+
 	// Don't yet have marker for that vehicle
 	return null;
 }
@@ -361,7 +361,7 @@ function formatSpeed(speedInMetersPerSec) {
 	// If not a number then just return blank string
 	if (speedInMetersPerSec == "NaN")
 		return "";
-	
+
 	// Convert m/s to km/hr and truncate to 1 decimal place to make
 	// output pretty
 	return (parseFloat(speedInMetersPerSec) * 3.6).toFixed(1) + " km/hr";
@@ -372,34 +372,34 @@ function formatSpeed(speedInMetersPerSec) {
  * to be displayed for the vehicles popup.
  */
 function getVehiclePopupContent(vehicleData) {
-    var layoverStr = verbose && vehicleData.layover ? 
+    var layoverStr = verbose && vehicleData.layover ?
 			 ("<br/><b>Layover:</b> " + vehicleData.layover) : "";
-    var layoverDepartureStr = vehicleData.layover ? 
-    		 ("<br/><b>Departure:</b> " + 
+    var layoverDepartureStr = vehicleData.layover ?
+    		 ("<br/><b>Departure:</b> " +
     				 dateFormat(vehicleData.layoverDepTime)) : "";
-    var nextStopNameStr = vehicleData.nextStopName ? 
+    var nextStopNameStr = vehicleData.nextStopName ?
     		 ("<br/><b>Next Stop:</b> " + vehicleData.nextStopName) : "";
     if (verbose && vehicleData.nextStopId)
     	nextStopNameStr += "<br/><b>Next Stop Id:</b> " + vehicleData.nextStopId;
-    var driver = vehicleData.driver ? 
+    var driver = vehicleData.driver ?
     		"<br/><b>Driver:</b> " + vehicleData.driver : "";
     var latLonHeadingStr = verbose ? "<br/><b>Lat:</b> " + vehicleData.loc.lat
-    			+ "<br/><b>Lon:</b> " + vehicleData.loc.lon 
-    			+ "<br/><b>Heading:</b> " + vehicleData.loc.heading 
+    			+ "<br/><b>Lon:</b> " + vehicleData.loc.lon
+    			+ "<br/><b>Heading:</b> " + vehicleData.loc.heading
     			+ "<br/><b>Speed:</b> " + formatSpeed(vehicleData.loc.speed)
     			: "";
 	var gpsTimeStr = dateFormat(vehicleData.loc.time);
-    var directionStr = verbose ? "<br/><b>Direction:</b> " + vehicleData.direction : ""; 
+    var directionStr = verbose ? "<br/><b>Direction:</b> " + vehicleData.direction : "";
     var tripPatternStr = verbose ? "<br/><b>Trip Pattern:</b> " + vehicleData.tripPattern : "";
     var startTimeStr = vehicleData.isScheduledService ? "" : "<br/><b>Start Time:</b> "+dateFormat(vehicleData.freqStartTime/1000);
     var schAdhStr = vehicleData.isScheduledService ? "<br/><b>SchAdh:</b> " + vehicleData.schAdhStr : ""
-    var content = "<b>Vehicle:</b> " + vehicleData.id 
+    var content = "<b>Vehicle:</b> " + vehicleData.id
     	+ "<br/><b>Route: </b> " + vehicleData.routeShortName
 		+ latLonHeadingStr
 		+ "<br/><b>GPS Time:</b> " + gpsTimeStr
 		+ "<br/><b>Headsign:</b> " + vehicleData.headsign
-		+ directionStr 
-		+ schAdhStr 
+		+ directionStr
+		+ schAdhStr
 		+ "<br/><b>Block:</b> " + vehicleData.block
 		+ "<br/><b>Trip:</b> " + vehicleData.trip
 		+ tripPatternStr
@@ -407,7 +407,7 @@ function getVehiclePopupContent(vehicleData) {
 		+ layoverStr
 		+ layoverDepartureStr
 		+ nextStopNameStr
-		+ driver;	
+		+ driver;
 	return content;
 }
 
@@ -458,7 +458,7 @@ function getVehicleMarkerBackgroundOptions(vehicleData) {
 	if (vehicleData.layover)
 		vehicleIcon = layoverIcon;
 	*/
-	
+
 	// Return the result
 	return vehicleIcon;
 }
@@ -470,7 +470,7 @@ function removeVehicleMarker(vehicleMarker) {
 	// Close stop predictions popup if there is one
 	if (vehicleMarker.popup)
 		map.closePopup(vehicleMarker.popup);
-	
+
 	map.removeLayer(vehicleMarker.background);
 	map.removeLayer(vehicleMarker.headingArrow);
 	map.removeLayer(vehicleMarker);
@@ -485,7 +485,7 @@ function removeAllVehicles() {
 		var vehicleMarker = vehicleMarkers[i];
 		removeVehicleMarker(vehicleMarker);
 	}
-	
+
 	// Clear out the vehicleMarkers array
 	vehicleMarkers.length = 0;
 }
@@ -493,7 +493,7 @@ function removeAllVehicles() {
 /*
  * For determining if vehicles and other markers are stale.
  * This can happen if laptop or tablet with map already running
- * is turned on again. 
+ * is turned on again.
  */
 var lastVehiclesUpdateTime = new Date();
 
@@ -504,23 +504,23 @@ function hideThingsIfStale() {
 		// predictions as well but that would be more work
 		// to implement.
 		removeAllVehicles();
-		
+
 		console.log("Removing all vehicle because no update in a while.");
-		
+
 		// Update lastVehiclesUpdateTime so that don't keep
 		// calling removeAlVehicles().
 		lastVehiclesUpdateTime = new Date();
-	}	
+	}
 }
 
 /**
  * Creates a new marker for the vehicle. The marker actually consists of
  * the main icon marker, a background circle, and an arrow marker to indicate
- * heading. 
+ * heading.
  */
 function createVehicleMarker(vehicleData) {
 	var vehicleLoc = L.latLng(vehicleData.loc.lat, vehicleData.loc.lon);
-	
+
 	// Create new icon. First create the background marker as
 	// a simple colored circle.
 	var vehicleBackground = L.circleMarker(vehicleLoc,
@@ -546,7 +546,7 @@ function createVehicleMarker(vehicleData) {
 			.setIcon(getIconForVehicle(vehicleData))
 			.addTo(map);
 
-	// Add the background and the heading arrow markers to 
+	// Add the background and the heading arrow markers to
 	// vehicleIcon so they can all be updated when the vehicle moves.
 	vehicleMarker.background = vehicleBackground;
 	vehicleMarker.headingArrow = headingArrow;
@@ -561,8 +561,8 @@ function createVehicleMarker(vehicleData) {
 		this.popup = L.popup(vehiclePopupOptions, this)
 			.setLatLng(latlng)
 			.setContent(content).openOn(map);
-	});	
-	
+	});
+
 	// Return the new marker
 	return vehicleMarker;
 }
@@ -584,7 +584,7 @@ function updateVehicleMarker(vehicleMarker, vehicleData) {
 	// Set to proper icon, which changes depending not just on vehicle
 	// type but also on whether currently on layover.
 	vehicleMarker.setIcon(getIconForVehicle(vehicleData));
-	
+
 	// Update orientation of the arrow for when setLatLng() is called
 	vehicleMarker.headingArrow.options.angle = vehicleData.loc.heading;
 
@@ -597,7 +597,7 @@ function updateVehicleMarker(vehicleMarker, vehicleData) {
 				.setOpacity(getVehicleMarkerOptions(vehicleData).opacity);
 	}
 
-	// Update content in vehicle popup, if it has changed, in case it 
+	// Update content in vehicle popup, if it has changed, in case it
 	// is actually popped up
 	if (vehicleMarker.popup) {
 		var content = getVehiclePopupContent(vehicleData);
@@ -609,9 +609,9 @@ function updateVehicleMarker(vehicleMarker, vehicleData) {
 	// Update markers location on the map if vehicle has actually moved.
 	if (vehicleMarker.vehicleData.loc.lat != vehicleData.loc.lat
 			|| vehicleMarker.vehicleData.loc.lon != vehicleData.loc.lon) {
-		animateVehicle(vehicleMarker, 
-				vehicleMarker.vehicleData.loc.lat, 
-				vehicleMarker.vehicleData.loc.lon, 
+		animateVehicle(vehicleMarker,
+				vehicleMarker.vehicleData.loc.lat,
+				vehicleMarker.vehicleData.loc.lon,
 				vehicleData.loc.lat, vehicleData.loc.lon);
 	}
 }
@@ -653,12 +653,12 @@ function vehicleLocationsCallback(vehicles, status) {
 	// Go through vehicle data read in for route...
 	for (var i = 0; i < vehicles.vehicles.length; ++i) {
 		var vehicleData = vehicles.vehicles[i];
-		
+
 		// Don't display schedule based vehicles since they are not real and
 		// would only serve to confuse people.
 		if (vehicleData.scheduleBased)
 			continue;
-		
+
 		var vehicleLoc = L.latLng(vehicleData.loc.lat, vehicleData.loc.lon);
 
 		// If vehicle icon wasn't already created then create it now
@@ -666,10 +666,10 @@ function vehicleLocationsCallback(vehicles, status) {
 		if (vehicleMarker == null) {
 			// Create the new marker
 			vehicleMarker = createVehicleMarker(vehicleData);
-			
+
 			// Keep track of vehicle marker so it can be updated
 			vehicleMarkers.push(vehicleMarker);
-			
+
 			// Definitely got updated data
 			gotUpdatedAvlData = true;
 		} else {
@@ -677,7 +677,7 @@ function vehicleLocationsCallback(vehicles, status) {
 			var oldVehicleData = vehicleMarker.vehicleData;
 			if (vehicleData.loc.time != oldVehicleData.loc.time)
 				gotUpdatedAvlData = true;
-				
+
 			// Vehicle icon already exists, so update it
 			updateVehicleMarker(vehicleMarker, vehicleData);
 		}
@@ -685,13 +685,13 @@ function vehicleLocationsCallback(vehicles, status) {
 		// Store vehicle data obtained via AJAX with vehicle so it can be used in popup
 		vehicleMarker.vehicleData = vehicleData;
 	}
-	
+
 	// If didn't get any updated AVL data then back off on the polling rate
 	if (!gotUpdatedAvlData) {
 		avlPollingRate = 2 * avlPollingRate;
 		if (avlPollingRate > MAX_AVL_POLLING_RATE)
 			avlPollingRate = MAX_AVL_POLLING_RATE;
-		console.log("Didn't get new AVL data so increasing polling rate to " 
+		console.log("Didn't get new AVL data so increasing polling rate to "
 				+ avlPollingRate + " msec.");
 	}
 
@@ -713,7 +713,7 @@ function interpolateVehicle(vehicleMarker, cnt, interpolationSteps, origLat, ori
 			/ interpolationSteps;
 	var interpolatedLoc = [ interpolatedLat, interpolatedLon ];
 
-//	console.log("interpolating vehicleId=" + vehicleMarker.vehicleData.id + " cnt=" + cnt + 
+//	console.log("interpolating vehicleId=" + vehicleMarker.vehicleData.id + " cnt=" + cnt +
 //			" interpolatedLat=" + interpolatedLat + " interpolatedLon=" + interpolatedLon);
 
 	// Update all markers sto have interpolated location
@@ -726,8 +726,8 @@ function interpolateVehicle(vehicleMarker, cnt, interpolationSteps, origLat, ori
 		vehicleMarker.popup.setLatLng(interpolatedLoc);
 
 	if (++cnt <= interpolationSteps) {
-		setTimeout(interpolateVehicle, 60, 
-				vehicleMarker, cnt, interpolationSteps, 
+		setTimeout(interpolateVehicle, 60,
+				vehicleMarker, cnt, interpolationSteps,
 				origLat, origLon, newLat, newLon);
 	}
 }
@@ -743,16 +743,16 @@ function interpolateVehicle(vehicleMarker, cnt, interpolationSteps, origLat, ori
  * to rounding.
  */
 function animateVehicle(vehicleMarker, origLat, origLon, newLat, newLon) {
-	//console.log("animating vehicleId=" + vehicleMarker.vehicleData.id + 
+	//console.log("animating vehicleId=" + vehicleMarker.vehicleData.id +
 	//		" origLat=" + origLat + " origLon=" + origLon +
 	//		" newLat=" + newLat + " newLon=" + newLon);
-	
+
 	// Use default interpolationSteps of 1 so that the marker location
 	// will be updated no matter what. This is important because even
 	// if vehicle only moves slightly or is off the map, still need
 	// to update vehicle position.
 	var interpolationSteps = 1;
-	
+
 	// Determine if vehicle is visile since no need to animate vehicles
 	// that aren't visible
 	var bounds = map.getBounds();
@@ -760,7 +760,7 @@ function animateVehicle(vehicleMarker, origLat, origLon, newLat, newLon) {
 	var newLatLng = L.latLng(newLat, newLon);
 	if (bounds.contains(origLatLng) && bounds.contains(newLatLng)) {
 		// Vehicle is visible. Determine number of pixels moving vehicle.
-		// Don't want to look at sqrt(x^2 + y^2) since trying to avoid 
+		// Don't want to look at sqrt(x^2 + y^2) since trying to avoid
 		// making the animation jagged. If use the sqrt distance traveled
 		// then would sometimes have the marker move sideways instead of
 		// forward since would be moving less than 1 pixel at a time
@@ -773,16 +773,16 @@ function animateVehicle(vehicleMarker, origLat, origLon, newLat, newLon) {
 
 		//console.log("origPoint=" + origPoint + " newPoint=" + newPoint);
 		//console.log("pixelsToMove=" + pixelsToMove);
-		
+
 		// Set interpolationSteps to number of pixels that need to move. This
 		// provides smoothest possible animation. But limit interpolationSteps
 		// to be at least 1 and at most 10.
 		interpolationSteps = Math.max(pixelsToMove, 1);
 		interpolationSteps = Math.min(interpolationSteps, 10);
 	}
-		
+
 	// Start the interpolation process to update marker position
-	interpolateVehicle(vehicleMarker, 1, interpolationSteps, origLat, origLon, 
+	interpolateVehicle(vehicleMarker, 1, interpolationSteps, origLat, origLon,
 			newLat, newLon);
 }
 
@@ -794,9 +794,9 @@ function updateVehiclesUsingApiData() {
 	// in all vehicles for agency!
 	if (!getRouteQueryStrParam())
 		return;
-	
+
 	var url = apiUrlPrefix + "/command/vehiclesDetails?" + getRouteQueryStrParam();
-	// If stop specified as query str param to this page pass it to the 
+	// If stop specified as query str param to this page pass it to the
 	// vehicles request such that all but the next 2 predicted vehicles
 	// will be labled as minor ones and can therefore be drawn in UI to not
 	// attract as much attention.
@@ -815,7 +815,7 @@ function updateVehiclesUsingApiData() {
 		  success: vehicleLocationsCallback,
 		  timeout: 6000 // 6 second timeout
 		});
-	
+
 	// Call this function again at the appropriate time. This can't be done
 	// in vehicleLocationsCallback() because it won't be called if there is
 	// an error.
@@ -829,18 +829,18 @@ var verbose = getQueryVariable("verbose");
 var agencyId = getQueryVariable("a");
 if (!agencyId)
 	alert("You must specify agency in URL using a=agencyId parameter");
- 
+
 // Create the map with a scale and zoom control in bottomleft so
 // doesn't interfere with route selector
 var map = L.map('map', {zoomControl: false});
 L.control.scale({metric: false}).addTo(map);
 L.control.zoom({position: 'bottomleft'}).addTo(map);
 
-var mapTileUrl = '<%= WebConfigParams.getMapTileUrl() %>'; 
+var mapTileUrl = '<%= WebConfigParams.getMapTileUrl() %>';
 L.tileLayer(mapTileUrl, {
 	// Specifying a shorter version of attribution. Original really too long.
-    //attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> &amp; <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery ©<%= WebConfigParams.getMapTileCopyright() %>',
+    //attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery ï¿½ <a href="http://mapbox.com">Mapbox</a>',
+    attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> &amp; <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery ï¿½<%= WebConfigParams.getMapTileCopyright() %>',
     maxZoom: 19
 }).addTo(map);
 
@@ -850,23 +850,23 @@ L.tileLayer(mapTileUrl, {
 // better.
 L.Path.CLIP_PADDING = 0.8;
 
-// Initiate event handler to be called when a popup is closed. Sets 
-// predictionsPopup to null to indicate that don't need to update predictions 
+// Initiate event handler to be called when a popup is closed. Sets
+// predictionsPopup to null to indicate that don't need to update predictions
 // anymore since stop popup not displayed anymore.
 map.on('popupclose', function(e) {
 	predictionsPopup = null;
 	clearTimeout(predictionsTimeout);
-	
+
 	if (e.popup.parent)
 		e.popup.parent.popup = null;
 });
 
 // Get timezone offset and put it into global agencyTimezoneOffset variable
 // and set map bounds to the agency extent if route not specified in query string
-$.getJSON(apiUrlPrefix + "/command/agencyGroup", 
+$.getJSON(apiUrlPrefix + "/command/agencyGroup",
 		function(agencies) {
 	        agencyTimezoneOffset = agencies.agency[0].timezoneOffsetMinutes;
-			
+
 	        // Fit the map initially to the agency, but only if route not
 	        // specified in query string. If route specified in query string
 	        // then the map will be fit to that route once it is loaded in.
@@ -874,7 +874,7 @@ $.getJSON(apiUrlPrefix + "/command/agencyGroup",
 				var e = agencies.agency[0].extent;
 				map.fitBounds([[e.minLat, e.minLon], [e.maxLat, e.maxLon]]);
 	        }
-	});	
+	});
 
 // Deal with routes. First determine if route specified by query string
 setRouteQueryStrParamViaQueryStr();
@@ -882,9 +882,9 @@ setRouteQueryStrParamViaQueryStr();
 // If route not specified in query string then create route selector.
 // Otherwise configure for the specified route.
 if (!getRouteQueryStrParam()) {
-  // Route not specified in query string. Therefore populate the route 
+  // Route not specified in query string. Therefore populate the route
   // selector if route not specified in query string.
-  $.getJSON(apiUrlPrefix + "/command/routes", 
+  $.getJSON(apiUrlPrefix + "/command/routes",
  		function(routes) {
 	        // Generate list of routes for the selector
 	 		var selectorData = [{id: '', text: 'Select Route'}];
@@ -892,23 +892,23 @@ if (!getRouteQueryStrParam()) {
 	 			var route = routes.routes[i];
 	 			selectorData.push({id: route.id, text: route.name})
 	 		}
-	 		
+
 	 		// Configure the selector to be a select2 one that has
 	 		// search capability
  			$("#routes").select2({
- 				placeholder: "Select Route", 				
+ 				placeholder: "Select Route",
  				data : selectorData})
  				// Called when user selects route. Draws route and associated vehicles on map.
  				.on("select2:select", function(e) {
  					// First remove all old vehicles so that they don't
  					// get moved around when zooming to new route
  					removeAllVehicles();
- 					
+
  					// Remove old predictions popup if there is one
- 					if (predictionsPopup) 
+ 					if (predictionsPopup)
  						map.closePopup(predictionsPopup);
- 					
- 					// Configure map for new route	
+
+ 					// Configure map for new route
  					var selectedRouteId = e.params.data.id;
  					var url = apiUrlPrefix + "/command/routesDetails?r=" + selectedRouteId;
  					$.getJSON(url, routeConfigCallback);
@@ -917,12 +917,12 @@ if (!getRouteQueryStrParam()) {
  					avlPollingRate = MIN_AVL_POLLING_RATE;
  					if (avlTimer)
  						clearTimeout(avlTimer);
- 					
+
  					// Read in vehicle locations now
- 					setRouteQueryStrParam("r=" + selectedRouteId); 					
+ 					setRouteQueryStrParam("r=" + selectedRouteId);
  					updateVehiclesUsingApiData();
- 					
- 		 			// Disable tooltips. For some reason get an unwanted 
+
+ 		 			// Disable tooltips. For some reason get an unwanted
  		 			// tooltip consisting of the current select once a selection
  		 			// has been made. It is really distracting. So have to do
  		 			// this convoluted thing after every selection in order to
@@ -938,7 +938,7 @@ if (!getRouteQueryStrParam()) {
  			// bunch of elements with peculiar and sometimes autogenerated
  			// ids. Therefore simply set focus to the "inpu" element.
  			// Note: only do this if not mobile touch device because on
- 			// such a device have input focus on route selector means 
+ 			// such a device have input focus on route selector means
  			// that keyboard pops up when user tries to pan screen.
  			var isMobile = window.matchMedia("only screen and (max-width: 760px)");
             if (!isMobile.matches) {
@@ -946,17 +946,17 @@ if (!getRouteQueryStrParam()) {
             	// Could not figure out how to set focus successfully.
             	//selector.focus();
             }
- 	});	 
+ 	});
 } else {
-	// Route was specified in query string. 
+	// Route was specified in query string.
 	// Read in the route info and draw it on map.
 	var url = apiUrlPrefix + "/command/routesDetails?" + getRouteQueryStrParam();
 	if (getQueryVariable("s"))
 		url += "&s=" + getQueryVariable("s");
 	if (getQueryVariable("tripPattern"))
 		url += "&tripPattern=" + getQueryVariable("tripPattern");
-	$.getJSON(url, routeConfigCallback);		
-	
+	$.getJSON(url, routeConfigCallback);
+
 	// Read in vehicle locations now (and every few seconds)
 	updateVehiclesUsingApiData();
 
@@ -974,12 +974,12 @@ if (!getRouteQueryStrParam()) {
  * such are removed as quickly as possible.
  */
 setInterval(hideThingsIfStale, 300);
- 
+
 /**
  * Fade out the Transitime.org title
  */
 setTimeout(function () {
 	$('#mapTitle').hide('fade', 1000);
  }, 1000);
-	 
+
 </script>
